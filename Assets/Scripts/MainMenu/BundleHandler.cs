@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class BundleHandler : MonoBehaviour
 {
     public static BundleHandler bundlehandler;
-    public string[] url, sceneNames;
+    public string[] url, sceneNames, khaled;
 
     static AssetBundle assetBundle;
     WWW www;
@@ -41,15 +41,15 @@ public class BundleHandler : MonoBehaviour
 
     public void playGamePressed(int i)
     {
-
         StartCoroutine(s(i));
     }
     IEnumerator s(int i)
     {
-        if (!assetBundle)
+        if (!assetBundle || !assetBundle.Contains(sceneNames[i]))
         {
             using (www = new WWW(url[i]))
             {
+                print(i);
                 loadingStart = true;
                 yield return www;
                 if (!string.IsNullOrEmpty(www.error))
@@ -62,9 +62,10 @@ public class BundleHandler : MonoBehaviour
 
             }
         }
+
         loadingStart = false;
         string[] scenes = assetBundle.GetAllScenePaths();
-
+        khaled = scenes;
         foreach (string s in scenes)
         {
             print(Path.GetFileNameWithoutExtension(s));
